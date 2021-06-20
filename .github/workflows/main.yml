@@ -75,24 +75,43 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_PASSWORD: ${{ secrets.AZURE_CLIENT_PASSWORD }}
 
-      - name: Package Steps
+      - name: Package steps
         run: |
           cd dist/steps/hello-world-upload
           zip hello-world-upload.${{ steps.version.outputs.version }}.zip *
 
-      - name: Package Target
+      - name: Package target
         run: |
           cd dist/steps/hello-world-target
           zip hello-world-target.${{ steps.version.outputs.version }}.zip *
 
-      - name: Upload steps Artifacts
-        uses: actions/upload-artifact@v2.2.2
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: hello-world-upload.${{ steps.version.outputs.version }}.zip
-          path: dist/steps/hello-world-upload/hello-world-upload.${{ steps.version.outputs.version }}.zip
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: Release ${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
 
-      - name: Upload targets Artifacts
-        uses: actions/upload-artifact@v2.2.2
+      - name: Upload steps artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: hello-world-target.${{ steps.version.outputs.version }}.zip
-          path: dist/steps/hello-world-target/hello-world-target.${{ steps.version.outputs.version }}.zip
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/steps/hello-world-upload/hello-world-upload.${{ steps.version.outputs.version }}.zip
+          asset_name: hello-world-upload.${{ steps.version.outputs.version }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload targets artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/steps/hello-world-target/hello-world-target.${{ steps.version.outputs.version }}.zip
+          asset_name: hello-world-target.${{ steps.version.outputs.version }}.zip
+          asset_content_type: application/zip
