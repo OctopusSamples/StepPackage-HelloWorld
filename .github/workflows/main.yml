@@ -75,15 +75,10 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_PASSWORD: ${{ secrets.AZURE_CLIENT_PASSWORD }}
 
-      - name: Package steps
+      - name: Create steps package
         run: |
-          cd dist/steps/hello-world-upload
-          zip hello-world-upload.${{ steps.version.outputs.version }}.zip *
-
-      - name: Package target
-        run: |
-          cd dist/steps/hello-world-target
-          zip hello-world-target.${{ steps.version.outputs.version }}.zip *
+          cd dist/steps
+          zip -r hello-world-upload.${{ steps.version.outputs.version }}.zip .
 
       - name: Create release
         id: create_release
@@ -102,16 +97,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/steps/hello-world-upload/hello-world-upload.${{ steps.version.outputs.version }}.zip
+          asset_path: dist/steps/hello-world-upload.${{ steps.version.outputs.version }}.zip
           asset_name: hello-world-upload.${{ steps.version.outputs.version }}.zip
-          asset_content_type: application/zip
-
-      - name: Upload targets artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/steps/hello-world-target/hello-world-target.${{ steps.version.outputs.version }}.zip
-          asset_name: hello-world-target.${{ steps.version.outputs.version }}.zip
           asset_content_type: application/zip
