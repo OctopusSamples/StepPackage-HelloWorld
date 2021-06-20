@@ -24,17 +24,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: install node
+      - name: Install node
         uses: actions/setup-node@v2.1.5
         with:
           node-version: '14.*'
 
-      - name: set version format
+      - name: Set version format
         id: setformat
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
@@ -43,7 +43,7 @@ jobs:
            echo '::set-output name=VERSION_FORMAT::${major}.${minor}.${patch}-alpha.${increment}'
           fi
 
-      - name: git semantic version
+      - name: Git semantic version
         id: version
         uses: PaulHatch/semantic-version@v3.1.2
         with:
@@ -63,7 +63,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: run build
+      - name: Run build
         run: |
           npm install
           npm run build -- -- -v ${{ steps.version.outputs.version }}
@@ -75,14 +75,24 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_PASSWORD: ${{ secrets.AZURE_CLIENT_PASSWORD }}
 
+      - name: Package Steps
+        run: |
+          cd dist/steps/hello-world-upload
+          zip hello-world-upload.${{ steps.version.outputs.version }}.zip .
+
+      - name: Package Target
+        run: |
+          cd dist/steps/hello-world-target
+          zip hello-world-target.${{ steps.version.outputs.version }}.zip .
+
       - name: Upload steps Artifacts
         uses: actions/upload-artifact@v2.2.2
         with:
-          name: step-package-azurestorage.${{ steps.version.outputs.version }}
-          path: ./dist/steps/
+          name: hello-world-upload.${{ steps.version.outputs.version }}.zip
+          path: dist/steps/hello-world-upload/hello-world-upload.${{ steps.version.outputs.version }}.zip
 
       - name: Upload targets Artifacts
         uses: actions/upload-artifact@v2.2.2
         with:
-          name: step-package-azurestorage.${{ steps.version.outputs.version }}
-          path: ./dist/deployment-targets/
+          name: hello-world-target.${{ steps.version.outputs.version }}.zip
+          path: dist/steps/hello-world-target/hello-world-target.${{ steps.version.outputs.version }}.zip
