@@ -78,12 +78,12 @@ jobs:
       - name: Package Steps
         run: |
           cd dist/steps/hello-world-upload
-          zip hello-world-upload.${{ steps.version.outputs.version }}.zip .
+          zip hello-world-upload.${{ steps.version.outputs.version }}.zip *
 
       - name: Package Target
         run: |
           cd dist/steps/hello-world-target
-          zip hello-world-target.${{ steps.version.outputs.version }}.zip .
+          zip hello-world-target.${{ steps.version.outputs.version }}.zip *
 
       - name: Upload steps Artifacts
         uses: actions/upload-artifact@v2.2.2
