@@ -313,6 +313,12 @@ The step package files are saved under the `dist/steps` folder. Add the contents
 
 If you are testing with a locally built copy of Octopus, copy the ZIP file to `\source\Octopus.Server\bin\net5.0\steps`.
 
+## Github workflows
+
+This repository contains a GitHub workflow that builds and tests the code, packages the resulting files, and creates a release with the step package archive.
+
+Use git tags to indicate releases, while commits to the `main` branch create `alpha` releases.
+
 ## Using the step package
 
 The target can now be selected when creating a new deployment target: 
