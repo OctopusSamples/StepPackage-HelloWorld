@@ -1,4 +1,4 @@
-Step packages are an evolution in the development of Octopus steps. Step packages address many of the concerns that made it difficult to implement new functionality as Octopus scaled up in terms of internal team size and external surface area. In particular, step packages are:
+Step packages are an evolution in the development of Octopus steps. [Step packages address many of the concerns](https://github.com/OctopusDeploy/Architecture/tree/main/Steps) that made it difficult to implement new functionality as Octopus scaled up in terms of internal team size and external surface area. In particular, step packages are:
 
 * Developed outside the main Octopus code base.
 * Tested as isolated and independent projects.
