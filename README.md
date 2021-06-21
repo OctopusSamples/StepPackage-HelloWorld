@@ -2,18 +2,18 @@ Step packages are an evolution in the development of Octopus steps. Step package
 
 * Developed outside the main Octopus code base.
 * Tested as isolated and independent projects.
-* Distributed on their own independent timelines.
-* Independently versioned, with each version able to be run side-by-side.
+* Distributed on their own independent timelines (not quite implemented yet).
+* Independently versioned, with each version able to be run side-by-side (not implemented yet).
 
-This sample project provides a starting point for anyone looking to create a new step package. The code in this repository defines a "Hello World" target and step to demonstrate a minimal step package implementation.
+This sample project provides a starting point for anyone looking to create a new step package. The code in this repository defines a "Hello World" target and step demonstrating a minimal step package implementation.
 
 ## Project directory structure
 
-The directory structure of a step package project is shown below:
+The directory structure of a step package is shown below:
 
 * `\`
-  * `steps` - A directory containing the step definitions.
-    * `<step-name>` - A directory containing the definition of a step. There may be many of these directories to define many steps within a single step package.
+  * `steps` - A directory containing one or more step definitions.
+    * `<step-name>` - A directory containing the definition of a step. There may be many of these directories defining many steps within a single step package.
       * `src` - The parent directory containing the step code and assets.
         * `__tests__` - The directory containing step tests.
           * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
@@ -23,12 +23,12 @@ The directory structure of a step package project is shown below:
         * `metadata.json` - The step metadata.
         * `ui.ts` - The step UI definition.
         * `validation.ts` - The step validation rules.
-  * `targets`
-    * `<target-name>`
-      * `src` - The parent directory containing the step code and assets.
-        * `__tests__` - The directory containing step tests.
+  * `targets` - A directory containing one or more target definitions.
+    * `<target-name>` - A directory containing the definition of a target. There may be many of these directories defining many steps within a single step package.
+      * `src` - The parent directory containing the target code and assets.
+        * `__tests__` - The directory containing target tests.
           * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
-        * `executor.ts` - The code to be executed when a target healthcheck is run by Octopus.
+        * `executor.ts` - The code to be executed when a target health check is run by Octopus.
         * `inputs.ts` - The definition of the inputs required by the target.
         * `logo.svg` - The image to be displayed in the Octopus web UI for the target.
         * `metadata.json` - The target metadata.
@@ -55,7 +55,7 @@ Creating a new target involves creating the following files under the `steps/<ta
 
 ### `metadata.json`
 
-The `metadata.json` provides details about the target. A sample is shown below:
+The `metadata.json` file provides details about the target. A sample is shown below:
 
 ```json
 {
@@ -74,11 +74,11 @@ The `metadata.json` provides details about the target. A sample is shown below:
 
 * `schemaVersion` is the version of the metadata file. `1.0.0` is the only version available.
 * `version` is the version of the target. Versioning is covered in detail [here](https://github.com/OctopusDeploy/Architecture/blob/main/Steps/Concepts/Versioning.md).
-* `type` defines the type of resource tobe created. It must be `deployment-target` for a target.
+* `type` defines the type of resource to be created. It must be `deployment-target` for a target.
 * `id` is the resource ID.
 * `name` is the name of the target displayed by the Octopus web UI.
 * `description` is the description of the target displayed by the Octopus UI.
-* `categories` is an array containing one or more step categories display by the Octopus UI where the target will be listed.
+* `categories` is an array containing one or more target categories display by the Octopus UI where the target will be listed.
 * `launcher` defines how the step is executed. A value of `node` means the step is executed by Node.js.
 
 ### `inputs.ts`
@@ -112,11 +112,11 @@ export default HelloWorldDeploymentTargetHealthCheckExecutor;
 
 ### `ui.ts`
 
-The form to be exposed by the Octopus web UI is defined by the function exported by the `ui.ts` file. The form is defined as an instance of the `DeploymentTargetUI` interface, which has two functions: `createInitialInputs` and `editInputsForm`.
+The form displayed by the Octopus web UI is defined by the function exported by the `ui.ts` file. The form is defined as an instance of the `DeploymentTargetUI` interface, which has two functions: `createInitialInputs` and `editInputsForm`.
 
 The `createInitialInputs` function allows the initial default field values to be defined.
 
-The `editInputsForm` function provides a DSL for building the user interface. The first parameter is the inputs defined in `inputs.ts`. The second parameter is an instance of `AvailableStepComponents`, which has factory functions for creating various input widgets like text fields, lists, radio buttons etc.
+The `editInputsForm` function provides a DSL for building the user interface. The first parameter is the inputs defined in `inputs.ts`. The second parameter is an instance of `AvailableDeploymentTargetComponents`, which has factory functions for creating various input widgets like text fields, lists, radio buttons etc.
 
 Here we define the initial value of the `greetingPrefix` input to be `Hello`, and build the form with a single `text` input:
 
@@ -149,11 +149,11 @@ export default HelloWorldTargetUI;
 
 ### `validation.ts`
 
-Form validation is performed by the function exported by the `validate.ts` file. This function the returns an array of `ValueValidator` objects, and takes two parameters:
+Form validation is performed by the function exported by the `validate.ts` file. This function returns an array of `ValueValidator` objects, and takes two parameters:
 1. The step inputs as [input paths](https://github.com/OctopusDeploy/Architecture/blob/main/Steps/Concepts/InputsAndOutputs.md#input-paths).
 2. A validation function that returns a `ValueValidator` and takes two parameters:
   1. An input path.
-  2. A function the returns a string containing the error code (or returns nothing if there is no validation error) and takes the input value (retrieved from the input path) as the first parameter.
+  2. A function returning a string containing the error code (or returns nothing if there is no validation error) and takes the input value (retrieved from the input path) as the first parameter.
 
 Here is an example:
 
@@ -251,7 +251,10 @@ export default HelloWorldStepExecutor;
 
 ### `ui.ts`
 
-The step form to be displayed by the Octopus web UI is defined much the same was it was with the target. There are some subtle differences though: it implements the `StepUI` type, and first parameter to the `createInitialInputs` function can be an instance of `InitialInputFactories`, which provides the ability to create blank package references.
+The step form to be displayed by the Octopus web UI is defined much the same was it was with the target. There are some subtle differences though: 
+* It implements the `StepUI` type. 
+* The first parameter to the `createInitialInputs` function can be an instance of `InitialInputFactories`, which provides the ability to create blank package references.
+* The second parameter to the `editInputsForm` function is an instance of `AvailableStepComponents`, which exposes a different widget set.
 
 Here we define the initial value of the `name` input to be a blank string, and build the form with a single `text` input:
 
