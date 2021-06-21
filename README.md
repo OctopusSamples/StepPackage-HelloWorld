@@ -14,24 +14,26 @@ The directory structure of a step package project is shown below:
 * `\`
   * `steps` - A directory containing the step definitions.
     * `<step-name>` - A directory containing the definition of a step. There may be many of these directories to define many steps within a single step package.
-      * `__tests__` - The directory containing step tests.
-        * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
-      * `executor.ts` - The code to be executed when a step is run by Octopus.
-      * `inputs.ts` - The definition of the inputs required by the step.
-      * `logo.svg` - The image to be displayed in the Octopus web UI for the step.
-      * `metadata.json` - The step metadata.
-      * `ui.ts` - The step UI definition.
-      * `validation.ts` - The step validation rules.
+      * `src` - The parent directory containing the step code and assets.
+        * `__tests__` - The directory containing step tests.
+          * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
+        * `executor.ts` - The code to be executed when a step is run by Octopus.
+        * `inputs.ts` - The definition of the inputs required by the step.
+        * `logo.svg` - The image to be displayed in the Octopus web UI for the step.
+        * `metadata.json` - The step metadata.
+        * `ui.ts` - The step UI definition.
+        * `validation.ts` - The step validation rules.
   * `targets`
     * `<target-name>`
-      * `__tests__` - The directory containing step tests.
-        * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
-      * `executor.ts` - The code to be executed when a target healthcheck is run by Octopus.
-      * `inputs.ts` - The definition of the inputs required by the target.
-      * `logo.svg` - The image to be displayed in the Octopus web UI for the target.
-      * `metadata.json` - The target metadata.
-      * `ui.ts` - The target UI definition.
-      * `validation.ts` - The target validation rules.
+      * `src` - The parent directory containing the step code and assets.
+        * `__tests__` - The directory containing step tests.
+          * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
+        * `executor.ts` - The code to be executed when a target healthcheck is run by Octopus.
+        * `inputs.ts` - The definition of the inputs required by the target.
+        * `logo.svg` - The image to be displayed in the Octopus web UI for the target.
+        * `metadata.json` - The target metadata.
+        * `ui.ts` - The target UI definition.
+        * `validation.ts` - The target validation rules.
   * `.eslintignore` - The [ESLint ignore file](https://eslint.org/docs/user-guide/configuring/ignoring-code#the-eslintignore-file).
   * `.eslintrc.js` - The [ESLint configuration file](https://eslint.org/docs/user-guide/configuring/).
   * `.gitignore` - The [git ignore file](https://git-scm.com/docs/gitignore).
@@ -81,7 +83,7 @@ The `metadata.json` provides details about the target. A sample is shown below:
 
 ### `inputs.ts`
 
-The `inputs.ts` file exports an interface defining the input fields required by the target. This interface is consumed by both `executor.ts` to read the values when performing the target's health check, and `ui.ts` to build up the form exposed in the Octopus web UI.
+The `inputs.ts` file exports an interface defining the input fields required by the target. This interface is consumed by `executor.ts` to read the values when performing the target's health check, `ui.ts` to build up the form exposed in the Octopus web UI, and `validate.ts` to verify new values.
 
 An example is shown below exposing a single string field:
 
@@ -93,7 +95,7 @@ export default interface HelloWorldTargetInputs {
 
 ### `executor.ts`
 
-Targets perform a health check to validate their inputs and check the state of the system they represent. This health check is performed by the function exposed by the `executor.ts` file.
+Targets perform a health check to validate their inputs and check the state of the system they represent. This health check is performed by the function exported by the `executor.ts` file.
 
 The example below prints some text to the log during a health check, and will always pass, meaning the target is always healthy:
 
@@ -110,7 +112,7 @@ export default HelloWorldDeploymentTargetHealthCheckExecutor;
 
 ### `ui.ts`
 
-The form to be exposed by the Octopus web UI is defined in the `ui.ts` file. The form is defined as an instance of the `DeploymentTargetUI` interface, which has two functions: `createInitialInputs` and `editInputsForm`.
+The form to be exposed by the Octopus web UI is defined by the function exported by the `ui.ts` file. The form is defined as an instance of the `DeploymentTargetUI` interface, which has two functions: `createInitialInputs` and `editInputsForm`.
 
 The `createInitialInputs` function allows the initial default field values to be defined.
 
@@ -147,11 +149,11 @@ export default HelloWorldTargetUI;
 
 ### `validation.ts`
 
-Form validation is defined in the `validate.ts` file. This file exports a function the returns an array of `ValueValidator` objects, and takes two parameters:
+Form validation is performed by the function exported by the `validate.ts` file. This function the returns an array of `ValueValidator` objects, and takes two parameters:
 1. The step inputs as [input paths](https://github.com/OctopusDeploy/Architecture/blob/main/Steps/Concepts/InputsAndOutputs.md#input-paths).
 2. A validation function that returns a `ValueValidator` and takes two parameters:
   1. An input path.
-  2. A function the returns a string containing the error code (or returns nothing if there is no validation error) and provides the input value as the first parameter.
+  2. A function the returns a string containing the error code (or returns nothing if there is no validation error) and takes the input value (retrieved from the input path) as the first parameter.
 
 Here is an example:
 
@@ -249,7 +251,7 @@ export default HelloWorldStepExecutor;
 
 ### `ui.ts`
 
-The step form to be displayed by the Octopus web UI is defined the same was it was with the target. There is one small difference though, where the first parameter to the `createInitialInputs` function can be an instance of `InitialInputFactories`, which provides the ability to create blank package references.
+The step form to be displayed by the Octopus web UI is defined much the same was it was with the target. There are some subtle differences though: it implements the `StepUI` type, and first parameter to the `createInitialInputs` function can be an instance of `InitialInputFactories`, which provides the ability to create blank package references.
 
 Here we define the initial value of the `name` input to be a blank string, and build the form with a single `text` input:
 
