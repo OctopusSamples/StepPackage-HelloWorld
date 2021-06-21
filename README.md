@@ -14,26 +14,24 @@ The directory structure of a step package project is shown below:
 * `\`
   * `steps` - A directory containing the step definitions.
     * `<step-name>` - A directory containing the definition of a step. There may be many of these directories to define many steps within a single step package.
-      * `src` - The directory containing the step source and configuration.
-        * `__tests__` - The directory containing step tests.
-          * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
-        * `executor.ts` - The code to be executed when a step is run by Octopus.
-        * `inputs.ts` - The definition of the inputs required by the step.
-        * `logo.svg` - The image to be displayed in the Octopus web UI for the step.
-        * `metadata.json` - The step metadata.
-        * `ui.ts` - The step UI definition.
-        * `validation.ts` - The step validation rules.
+      * `__tests__` - The directory containing step tests.
+        * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
+      * `executor.ts` - The code to be executed when a step is run by Octopus.
+      * `inputs.ts` - The definition of the inputs required by the step.
+      * `logo.svg` - The image to be displayed in the Octopus web UI for the step.
+      * `metadata.json` - The step metadata.
+      * `ui.ts` - The step UI definition.
+      * `validation.ts` - The step validation rules.
   * `targets`
     * `<target-name>`
-      * `src`
-        * `__tests__` - The directory containing step tests.
-          * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
-        * `executor.ts` - The code to be executed when a target healthcheck is run by Octopus.
-        * `inputs.ts` - The definition of the inputs required by the target.
-        * `logo.svg` - The image to be displayed in the Octopus web UI for the target.
-        * `metadata.json` - The target metadata.
-        * `ui.ts` - The target UI definition.
-        * `validation.ts` - The target validation rules.
+      * `__tests__` - The directory containing step tests.
+        * `executor.spec.ts` - Tests validating the logic in the `executor.ts` file.
+      * `executor.ts` - The code to be executed when a target healthcheck is run by Octopus.
+      * `inputs.ts` - The definition of the inputs required by the target.
+      * `logo.svg` - The image to be displayed in the Octopus web UI for the target.
+      * `metadata.json` - The target metadata.
+      * `ui.ts` - The target UI definition.
+      * `validation.ts` - The target validation rules.
   * `.eslintignore` - The [ESLint ignore file](https://eslint.org/docs/user-guide/configuring/ignoring-code#the-eslintignore-file).
   * `.eslintrc.js` - The [ESLint configuration file](https://eslint.org/docs/user-guide/configuring/).
   * `.gitignore` - The [git ignore file](https://git-scm.com/docs/gitignore).
