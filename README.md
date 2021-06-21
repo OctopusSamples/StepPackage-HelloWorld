@@ -322,3 +322,7 @@ The target can now be selected when creating a new deployment target:
 The step is available when building a deployment project:
 
 ![](step.png)
+
+Here is the result of a deployment with the new step package:
+
+![](execution.png)
