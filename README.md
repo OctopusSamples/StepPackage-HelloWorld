@@ -301,3 +301,25 @@ const validateInputs: ValidateInputs<HelloWorldStepInputs> = (inputs, validate) 
 };
 export default validateInputs;
 ```
+
+## Building the step package
+
+To build the step packages, run the following commands:
+
+1. `npm install`
+2. `npm run build`
+3. `npm run test`
+
+The step package files are saved under the `dist/steps` folder. Add the contents of this folder to a ZIP file and copy to the `steps` folder in Octopus.
+
+If you are testing with a locally built copy of Octopus, copy the ZIP file to `\source\Octopus.Server\bin\net5.0\steps`.
+
+## Using the step package
+
+The target can now be selected when creating a new deployment target: 
+
+![](target.png)
+
+The step is available when building a deployment project:
+
+![](step.png)
