@@ -251,7 +251,7 @@ export default HelloWorldStepExecutor;
 
 ### `ui.ts`
 
-The step form to be displayed by the Octopus web UI is defined much the same was it was with the target. There are some subtle differences though: 
+The step form displayed by the Octopus web UI is defined much the same as it was with the target. There are some subtle differences though: 
 * It implements the `StepUI` type. 
 * The first parameter to the `createInitialInputs` function can be an instance of `InitialInputFactories`, which provides the ability to create blank package references.
 * The second parameter to the `editInputsForm` function is an instance of `AvailableStepComponents`, which exposes a different widget set.
@@ -303,25 +303,25 @@ export default validateInputs;
 
 ## Building the step package
 
-To build the step packages, run the following commands:
+To build step packages, run the following commands:
 
 1. `npm install`
 2. `npm run build`
 3. `npm run test`
 
-The step package files are saved under the `dist/steps` folder. Add the contents of this folder to a ZIP file and copy to the `steps` folder in Octopus.
+The step package files are saved under the `dist/steps` folder. Add the contents of this folder to a ZIP file and copy it to the `steps` folder in Octopus.
 
-If you are testing with a locally built copy of Octopus, copy the ZIP file to `\source\Octopus.Server\bin\net5.0\steps`.
+If you are testing with a locally built copy of Octopus, place the ZIP file in `\source\Octopus.Server\bin\net5.0\steps`.
 
-## Github workflows
+## GitHub workflows
 
-This repository contains a GitHub workflow that builds and tests the code, packages the resulting files, and creates a release with the step package archive.
+This repository contains a [GitHub workflow](https://github.com/OctopusSamples/StepPackage-HelloWorld/blob/main/.github/workflows/main.yml) that builds and tests the code, packages the resulting files, and creates a release with the step package archive.
 
 Use git tags to indicate releases, while commits to the `main` branch create `alpha` releases.
 
 ## Using the step package
 
-The target can now be selected when creating a new deployment target: 
+With the step package copied to the `steps` directory, target can now be selected when creating a new deployment target: 
 
 ![](target.png)
 
