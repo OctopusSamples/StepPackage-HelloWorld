@@ -20,5 +20,4 @@ export const HelloWorldStepUI: StepUI<HelloWorldStepInputs> = {
     },
 };
 
-
 export default HelloWorldStepUI;
