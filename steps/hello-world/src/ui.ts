@@ -7,8 +7,7 @@ export const HelloWorldStepUI: StepUI<HelloWorldStepInputs> = {
             name: ""
         };
     },
-    editInputsForm: (inputs, availableComponents) => {
-        const { text } = availableComponents;
+    editInputsForm: (inputs, { text }) => {
         return [
             text({
                 input: inputs.name,
