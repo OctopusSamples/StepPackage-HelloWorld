@@ -77,8 +77,12 @@ jobs:
 
       - name: Create steps package
         run: |
-          cd dist/steps
-          zip -r steps-package-helloworld.${{ steps.version.outputs.version }}.zip .
+          cd dist/steps/hello-world-target
+          zip -r ../steps-package-helloworld.target.${{ steps.version.outputs.version }}.zip .
+          cd ../hello-world-upload
+          zip -r ../steps-package-helloworld.upload.${{ steps.version.outputs.version }}.zip .
+          cd ..
+          zip steps-package-helloworld.${{ steps.version.outputs.version }}.zip steps-package-helloworld.target.${{ steps.version.outputs.version }}.zip steps-package-helloworld.upload.${{ steps.version.outputs.version }}.zip
 
       - name: Create release
         id: create_release
