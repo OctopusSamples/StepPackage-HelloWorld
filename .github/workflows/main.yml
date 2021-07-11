@@ -75,6 +75,11 @@ jobs:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_PASSWORD: ${{ secrets.AZURE_CLIENT_PASSWORD }}
           
+      - name: Create steps package
+        run: |
+          zip steps-package-helloworld.${{ steps.version.outputs.version }}.zip output/staged/hello-world-upload.${{ steps.version.outputs.version }}.zip output/staged/hello-world-target.${{ steps.version.outputs.version }}.zip
+
+          
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -92,6 +97,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: output/staged/hello-world-upload.${{ steps.version.outputs.version }}.zip
+          asset_path: steps-package-helloworld.${{ steps.version.outputs.version }}.zip
           asset_name: steps-package-helloworld.${{ steps.version.outputs.version }}.zip
           asset_content_type: application/zip
