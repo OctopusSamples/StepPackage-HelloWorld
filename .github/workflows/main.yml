@@ -77,7 +77,10 @@ jobs:
           
       - name: Create steps package
         run: |
-          zip steps-package-helloworld.${{ steps.version.outputs.version }}.zip output/staged/hello-world-upload.${{ steps.version.outputs.version }}.zip output/staged/hello-world-target.${{ steps.version.outputs.version }}.zip
+          cd output/staged
+          zip ../../steps-package-helloworld.${{ steps.version.outputs.version }}.zip \
+            hello-world-upload.${{ steps.version.outputs.version }}.zip \
+            hello-world-target.${{ steps.version.outputs.version }}.zip
 
           
       - name: Create release
