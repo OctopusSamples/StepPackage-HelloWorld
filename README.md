@@ -45,7 +45,7 @@ The directory structure of a step package is shown below:
 
 ## Creating a new target
 
-Creating a new target involves creating the following files under the `steps/<target-name>-target/src` directory. In the case of this sample step package, we'll create them under `steps/hello-world-target/src`:
+Creating a new target involves creating the following files under the `targets/<target-name>-target/src` directory. In the case of this sample step package, we'll create them under `targets/hello-world-target/src`:
 
 * `metadata.json`
 * `inputs.ts`
